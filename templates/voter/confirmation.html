@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Your Vote | ECI e-Voting{% endblock %}
+{% block body_class %}voter-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='voter.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav voter-nav">
+  <a href="{{ url_for('voter_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🗳️</span>
+    <div>
+      <div class="nav-brand-text">ECI Voter Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('voter_vote', campaign_id=campaign['campaign_id']) }}" class="nav-logout">← Change</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="confirm-card card">
+    <span class="confirm-icon">🗳️</span>
+    <h2 style="font-family:'Outfit',sans-serif;color:white;font-size:1.6rem;margin-bottom:8px">Confirm Your Vote</h2>
+    <p style="color:rgba(255,255,255,0.45);margin-bottom:4px">Please review your selection carefully.</p>
+    <p style="color:rgba(250,204,21,0.75);font-size:13px">⚠️ Once confirmed, your vote cannot be changed.</p>
+
+    <div class="confirm-detail">
+      <div class="confirm-row">
+        <span class="label">Campaign</span>
+        <span class="value">{{ campaign['campaign_name'] }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Constituency</span>
+        <span class="value">{{ campaign['constituency'] }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Your Candidate</span>
+        <span class="value">{{ candidate['party_symbol'] or '🗳️' }} &nbsp;{{ candidate['candidate_name'] }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Party</span>
+        <span class="value">{{ candidate['party_name'] }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Candidate ID</span>
+        <span class="value">{{ candidate['candidate_id'] }}</span>
+      </div>
+    </div>
+
+    <div class="confirm-btns">
+      <form method="POST" action="{{ url_for('voter_submit') }}">
+        <input type="hidden" name="campaign_id" value="{{ campaign['campaign_id'] }}">
+        <input type="hidden" name="candidate_id" value="{{ candidate['candidate_id'] }}">
+        <button type="submit" class="btn confirm-vote-btn">✅ &nbsp;Confirm &amp; Submit Vote</button>
+      </form>
+      <a href="{{ url_for('voter_vote', campaign_id=campaign['campaign_id']) }}" class="btn btn-ghost">← Change Selection</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Admin Login | ECI e-Voting{% endblock %}
+{% block body_class %}admin-body admin-auth auth-page{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <span class="logo-icon">⚙️</span>
+    <h1>Admin Portal</h1>
+    <p>Election Commission of India – Madhya Pradesh</p>
+  </div>
+
+  {% if locked %}
+  <div class="lockout-banner">
+    🔒 &nbsp;Account locked due to 3 failed login attempts.<br>
+    Please contact the system administrator to unlock.
+  </div>
+  {% else %}
+  <form method="POST" action="{{ url_for('admin_login') }}" autocomplete="off">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter admin username" required autofocus>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+    </div>
+    <button type="submit" class="btn-primary admin">🔐 &nbsp;Login to Admin Portal</button>
+  </form>
+  {% endif %}
+
+  <a href="{{ url_for('home') }}" class="auth-link">← Back to Home</a>
+</div>
+{% endblock %}

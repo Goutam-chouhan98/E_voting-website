@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Voter Login | ECI e-Voting{% endblock %}
+{% block body_class %}voter-body voter-auth auth-page{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='voter.css') }}">{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <span class="logo-icon">🗳️</span>
+    <h1>Voter Portal</h1>
+    <p>Election Commission of India – Madhya Pradesh</p>
+  </div>
+
+  {% if locked %}
+  <div class="lockout-banner">
+    🔒 &nbsp;Your account is locked due to 3 failed login attempts.<br>
+    Please contact your nearest Polling Authority to unlock.
+  </div>
+  {% else %}
+  <form method="POST" action="{{ url_for('voter_login') }}" autocomplete="off">
+    <div class="form-group">
+      <label for="voter_id">Voter ID</label>
+      <input type="text" id="voter_id" name="voter_id" placeholder="e.g. MP001" required autofocus style="text-transform:uppercase">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    </div>
+    <button type="submit" class="btn-primary voter">🗳️ &nbsp;Login to Vote</button>
+  </form>
+  {% endif %}
+
+  <a href="{{ url_for('home') }}" class="auth-link">← Back to Home</a>
+</div>
+
+<style>
+  :root { --accent:#06b6d4; --accent-glow:rgba(6,182,212,0.2); }
+  .btn-primary { background:linear-gradient(135deg,#06b6d4,#0284c7); color:white; }
+  .btn-primary:hover { box-shadow:0 6px 24px rgba(6,182,212,0.45); }
+</style>
+{% endblock %}

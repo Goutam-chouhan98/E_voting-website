@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Create Campaign | ECI Admin{% endblock %}
+{% block body_class %}admin-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav admin-nav">
+  <a href="{{ url_for('admin_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🏛️</span>
+    <div>
+      <div class="nav-brand-text">ECI Admin Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-logout">← Dashboard</a>
+    <a href="{{ url_for('admin_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="page-header">
+    <h1>Create New Campaign</h1>
+    <p>Set up a new election campaign with constituency and schedule details</p>
+  </div>
+
+  <div class="step-indicator">
+    <div class="step active"><span class="step-num">1</span> Campaign Details</div>
+    <span class="step-sep">→</span>
+    <div class="step"><span class="step-num">2</span> Add Candidates</div>
+    <span class="step-sep">→</span>
+    <div class="step"><span class="step-num">3</span> Live</div>
+  </div>
+
+  <div class="form-card" style="max-width:680px">
+    <form method="POST" action="{{ url_for('create_campaign') }}">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="campaign_id">Campaign ID *</label>
+          <input type="text" id="campaign_id" name="campaign_id" placeholder="e.g. MLA2024-BPL" required>
+          <div class="hint">Unique identifier for this campaign</div>
+        </div>
+        <div class="form-field">
+          <label for="constituency">Constituency Name *</label>
+          <input type="text" id="constituency" name="constituency" placeholder="e.g. Bhopal Central" required>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="campaign_name">Campaign Name *</label>
+        <input type="text" id="campaign_name" name="campaign_name" placeholder="e.g. MLA Election 2024 – Bhopal Central" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="start_dt">Start Date &amp; Time *</label>
+          <input type="datetime-local" id="start_dt" name="start_dt" required>
+        </div>
+        <div class="form-field">
+          <label for="end_dt">End Date &amp; Time *</label>
+          <input type="datetime-local" id="end_dt" name="end_dt" required>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <button type="submit" class="btn btn-create">Create Campaign →</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

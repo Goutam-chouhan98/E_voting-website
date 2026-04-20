@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Manage Candidates | ECI Admin{% endblock %}
+{% block body_class %}admin-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav admin-nav">
+  <a href="{{ url_for('admin_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🏛️</span>
+    <div>
+      <div class="nav-brand-text">ECI Admin Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-logout">← Dashboard</a>
+    <a href="{{ url_for('admin_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="step-indicator">
+    <div class="step"><span class="step-num">✓</span> Campaign Details</div>
+    <span class="step-sep">→</span>
+    <div class="step active"><span class="step-num">2</span> Add Candidates</div>
+    <span class="step-sep">→</span>
+    <div class="step"><span class="step-num">3</span> Live</div>
+  </div>
+
+  <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1>{{ campaign['campaign_name'] }}</h1>
+      <p>📍 {{ campaign['constituency'] }} &nbsp;·&nbsp; ID: {{ campaign['campaign_id'] }}</p>
+    </div>
+    <a href="{{ url_for('admin_results', campaign_id=campaign['campaign_id']) }}" class="btn btn-results">📊 View Results</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start" class="manage-grid">
+
+    <!-- Add Candidate Form -->
+    <div class="form-card">
+      <h3 style="color:white;font-family:'Outfit',sans-serif;font-size:1.1rem;margin-bottom:20px">+ Add Candidate</h3>
+      <form method="POST" action="{{ url_for('manage_campaign', campaign_id=campaign['campaign_id']) }}">
+        <div class="form-field">
+          <label>Candidate ID *</label>
+          <input type="text" name="candidate_id" placeholder="e.g. C001" required>
+        </div>
+        <div class="form-field">
+          <label>Candidate Name *</label>
+          <input type="text" name="candidate_name" placeholder="Full name" required>
+        </div>
+        <div class="form-field">
+          <label>Party Symbol</label>
+          <input type="text" name="party_symbol" placeholder="e.g. 🌸 Lotus, ✋ Hand">
+          <div class="hint">Emoji or symbol representing the party</div>
+        </div>
+        <div class="form-field">
+          <label>Party Name *</label>
+          <input type="text" name="party_name" placeholder="e.g. Bharatiya Janata Party" required>
+        </div>
+        <div class="form-field">
+          <label>Additional Info</label>
+          <textarea name="additional_info" placeholder="Constituency, age, background..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-create" style="width:100%">Add Candidate</button>
+      </form>
+    </div>
+
+    <!-- Candidates List -->
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="color:white;font-family:'Outfit',sans-serif;font-size:1.1rem">Registered Candidates ({{ candidates|length }})</h3>
+      </div>
+
+      {% if candidates %}
+      <div style="display:flex;flex-direction:column;gap:12px">
+        {% for cand in candidates %}
+        <div class="card" style="padding:20px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div style="display:flex;gap:14px;align-items:center">
+              <span style="font-size:2rem">{{ cand['party_symbol'] or '🗳️' }}</span>
+              <div>
+                <div style="color:white;font-weight:700;font-size:0.95rem">{{ cand['candidate_name'] }}</div>
+                <div style="color:rgba(255,255,255,0.45);font-size:12px;margin-top:3px">{{ cand['party_name'] }}</div>
+                <div style="color:rgba(255,255,255,0.3);font-size:11px;margin-top:2px">ID: {{ cand['candidate_id'] }}</div>
+              </div>
+            </div>
+            <form method="POST" action="{{ url_for('delete_candidate', campaign_id=campaign['campaign_id'], candidate_id=cand['candidate_id']) }}" onsubmit="return confirm('Remove this candidate?')">
+              <button type="submit" class="btn btn-sm btn-danger">✕ Remove</button>
+            </form>
+          </div>
+          {% if cand['additional_info'] %}
+          <div style="color:rgba(255,255,255,0.35);font-size:12px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">{{ cand['additional_info'] }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="card empty-state">
+        <span class="empty-icon">👥</span>
+        <p>No candidates added yet.<br>Use the form on the left to add candidates.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+@media(max-width:768px){ .manage-grid{ grid-template-columns:1fr !important; } }
+</style>
+{% endblock %}

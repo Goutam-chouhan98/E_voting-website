@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Results – {{ campaign['campaign_name'] }} | ECI Admin{% endblock %}
+{% block body_class %}admin-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav admin-nav">
+  <a href="{{ url_for('admin_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🏛️</span>
+    <div>
+      <div class="nav-brand-text">ECI Admin Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-logout">← Dashboard</a>
+    <a href="{{ url_for('admin_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="page-header">
+    <h1>📊 Election Results</h1>
+    <p>{{ campaign['campaign_name'] }} &nbsp;·&nbsp; 📍 {{ campaign['constituency'] }}</p>
+  </div>
+
+  <div style="max-width:700px">
+
+    <!-- Winner Banner -->
+    {% if results and results[0]['vote_count'] > 0 %}
+    <div class="result-winner">
+      <div style="color:rgba(255,255,255,0.45);font-size:12px;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">
+        {% if campaign['result_published'] %}🏆 Leading Candidate{% else %}📈 Current Standing (Draft){% endif %}
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:2rem">{{ results[0]['party_symbol'] or '🗳️' }}</span>
+        <div>
+          <div style="color:white;font-size:1.15rem;font-weight:700">{{ results[0]['candidate_name'] }}</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:13px">{{ results[0]['party_name'] }} &nbsp;·&nbsp; {{ results[0]['vote_count'] }} votes</div>
+        </div>
+        <span style="margin-left:auto;font-size:1.5rem">🏆</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Results Bars -->
+    <div class="card" style="margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="color:white;font-family:'Outfit',sans-serif">Vote Tally</h3>
+        <span style="color:rgba(255,255,255,0.4);font-size:13px">Total votes cast: <strong style="color:white">{{ total_votes }}</strong></span>
+      </div>
+
+      {% if results %}
+        {% for r in results %}
+        {% set pct = ((r['vote_count'] / total_votes * 100) if total_votes > 0 else 0)|round(1) %}
+        <div class="result-bar-wrap">
+          <div class="result-bar-label">
+            <span class="result-bar-name">
+              {{ r['party_symbol'] or '🗳️' }} &nbsp;{{ r['candidate_name'] }}
+              <span style="color:rgba(255,255,255,0.35);font-weight:400;font-size:12px"> — {{ r['party_name'] }}</span>
+            </span>
+            <span class="result-bar-count">{{ r['vote_count'] }} votes ({{ pct }}%)</span>
+          </div>
+          <div class="result-bar-track">
+            <div class="result-bar-fill {% if loop.first %}winner{% endif %}" style="width:{{ pct }}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state" style="padding:30px 0">
+          <span class="empty-icon">📊</span>
+          <p>No candidates or votes yet for this campaign.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Campaign Info -->
+    <div class="card" style="margin-bottom:24px">
+      <h3 style="color:white;font-family:'Outfit',sans-serif;margin-bottom:16px">Campaign Info</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:3px">Campaign ID</div><div style="color:white;font-size:14px">{{ campaign['campaign_id'] }}</div></div>
+        <div><div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:3px">Constituency</div><div style="color:white;font-size:14px">{{ campaign['constituency'] }}</div></div>
+        <div><div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:3px">Start</div><div style="color:white;font-size:14px">{{ campaign['start_dt'][:16]|replace('T',' ') }}</div></div>
+        <div><div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:3px">End</div><div style="color:white;font-size:14px">{{ campaign['end_dt'][:16]|replace('T',' ') }}</div></div>
+        <div><div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:3px">Results Status</div>
+          <div>{% if campaign['result_published'] %}<span class="badge badge-active">✅ Published</span>{% else %}<span class="badge badge-upcoming">⏳ Not Published</span>{% endif %}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publish Button -->
+    {% if not campaign['result_published'] %}
+    <form method="POST" action="{{ url_for('admin_results', campaign_id=campaign['campaign_id']) }}" onsubmit="return confirm('Publish results publicly? This cannot be undone.')">
+      <input type="hidden" name="action" value="publish">
+      <button type="submit" class="btn btn-create" style="padding:14px 32px;font-size:15px">
+        🚀 &nbsp;Publish Results to Voters
+      </button>
+    </form>
+    {% else %}
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:16px 20px;color:#4ade80;font-size:14px">
+      ✅ Results have been published and are now visible to voters.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

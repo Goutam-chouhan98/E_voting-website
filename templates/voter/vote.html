@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Cast Your Vote | ECI e-Voting{% endblock %}
+{% block body_class %}voter-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='voter.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav voter-nav">
+  <a href="{{ url_for('voter_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🗳️</span>
+    <div>
+      <div class="nav-brand-text">ECI Voter Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('voter_dashboard') }}" class="nav-logout">← Back</a>
+    <a href="{{ url_for('voter_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="page-header">
+    <h1>{{ campaign['campaign_name'] }}</h1>
+    <p>📍 {{ campaign['constituency'] }} &nbsp;·&nbsp; Select one candidate and click Submit Vote</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('voter_confirm') }}" id="voteForm">
+    <input type="hidden" name="campaign_id" value="{{ campaign['campaign_id'] }}">
+    <input type="hidden" name="candidate_id" id="selectedCandidateId" value="">
+
+    <div class="candidate-grid">
+      {% for cand in candidates %}
+      <div class="candidate-card" id="card-{{ cand['candidate_id'] }}"
+           onclick="selectCandidate('{{ cand['candidate_id'] }}')">
+        <div class="candidate-check">✓</div>
+        <span class="candidate-symbol">{{ cand['party_symbol'] or '🗳️' }}</span>
+        <div class="candidate-name">{{ cand['candidate_name'] }}</div>
+        <div class="candidate-party">{{ cand['party_name'] }}</div>
+        <div class="candidate-id">ID: {{ cand['candidate_id'] }}</div>
+        {% if cand['additional_info'] %}
+        <div style="color:rgba(255,255,255,0.25);font-size:11px;margin-top:6px;line-height:1.4">{{ cand['additional_info'] }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="text-align:center">
+      <p id="selectHint" style="color:rgba(255,255,255,0.35);font-size:14px;margin-bottom:20px">
+        👆 Click on a candidate card to select
+      </p>
+      <button type="submit" class="btn submit-vote-btn" id="submitBtn" disabled onclick="return validateVote()">
+        Review My Vote →
+      </button>
+    </div>
+  </form>
+</div>
+
+{% block extra_js %}
+<script>
+  function selectCandidate(id) {
+    document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('card-' + id).classList.add('selected');
+    document.getElementById('selectedCandidateId').value = id;
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('selectHint').textContent = '✓ Candidate selected — click Review My Vote to proceed';
+    document.getElementById('selectHint').style.color = '#22d3ee';
+  }
+  function validateVote() {
+    if (!document.getElementById('selectedCandidateId').value) {
+      alert('Please select a candidate first.');
+      return false;
+    }
+    return true;
+  }
+</script>
+{% endblock %}
+{% endblock %}

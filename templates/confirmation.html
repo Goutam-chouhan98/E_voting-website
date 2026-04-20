@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirm Vote</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Confirm Your Selection</h2>
+    <p>You selected: <strong>{{ candidate_name }}</strong></p>
+    <form method="POST" action="/confirm_vote">
+      <input type="hidden" name="candidate_id" value="{{ candidate_id }}">
+      <button type="submit">Confirm</button>
+    </form>
+  </div>
+</body>
+</html>

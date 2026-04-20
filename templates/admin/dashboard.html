@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | ECI e-Voting{% endblock %}
+{% block body_class %}admin-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav admin-nav">
+  <a href="{{ url_for('admin_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🏛️</span>
+    <div>
+      <div class="nav-brand-text">ECI Admin Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <span class="nav-user">👤 Administrator</span>
+    <a href="{{ url_for('admin_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+    <div>
+      <h1>Election Campaigns</h1>
+      <p>Manage all campaigns, candidates, and results</p>
+    </div>
+    <a href="{{ url_for('create_campaign') }}" class="btn btn-create">+ Create New Campaign</a>
+  </div>
+
+  {% set total = campaigns|length %}
+  {% set active_count = campaigns|selectattr('status','equalto','active')|list|length %}
+  {% set ended_count = campaigns|selectattr('status','equalto','ended')|list|length %}
+  {% set upcoming_count = campaigns|selectattr('status','equalto','upcoming')|list|length %}
+
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-n">{{ total }}</div><div class="stat-l">Total Campaigns</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#4ade80">{{ active_count }}</div><div class="stat-l">Active Now</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#fbbf24">{{ upcoming_count }}</div><div class="stat-l">Upcoming</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#6b7280">{{ ended_count }}</div><div class="stat-l">Ended</div></div>
+  </div>
+
+  {% if campaigns %}
+  <div class="cards-grid">
+    {% for c in campaigns %}
+    <div class="card campaign-card">
+      <div class="campaign-card-header">
+        <div>
+          <h3>{{ c.campaign_name }}</h3>
+          <div class="campaign-constituency">📍 {{ c.constituency }}</div>
+        </div>
+        <span class="badge badge-{{ c.status }}">{{ c.status|upper }}</span>
+      </div>
+
+      <div class="campaign-meta">
+        <div class="meta-item">
+          <span class="meta-label">Campaign ID</span>
+          <span class="meta-value">{{ c.campaign_id }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Start</span>
+          <span class="meta-value">{{ c.start_dt[:16]|replace('T',' ') }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">End</span>
+          <span class="meta-value">{{ c.end_dt[:16]|replace('T',' ') }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Results</span>
+          <span class="meta-value">{% if c.result_published %}✅ Published{% else %}⏳ Pending{% endif %}</span>
+        </div>
+      </div>
+
+      <div class="campaign-stats">
+        <div class="stat-chip">👥 <strong>{{ c.candidate_count }}</strong> Candidates</div>
+        <div class="stat-chip">🗳️ <strong>{{ c.vote_count }}</strong> Votes</div>
+      </div>
+
+      <div class="campaign-actions">
+        <a href="{{ url_for('manage_campaign', campaign_id=c.campaign_id) }}" class="btn btn-sm btn-manage">👥 Manage Candidates</a>
+        <a href="{{ url_for('admin_results', campaign_id=c.campaign_id) }}" class="btn btn-sm btn-results">📊 View Results</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty-state">
+    <span class="empty-icon">📋</span>
+    <p>No campaigns created yet.<br>Click <strong>Create New Campaign</strong> to get started.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

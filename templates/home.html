@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}ECI e-Voting System | Madhya Pradesh{% endblock %}
+{% block body_class %}home-body{% endblock %}
+
+{% block content %}
+<div class="home-bg">
+  <header class="home-header">
+    <div class="eci-emblem">🏛️</div>
+    <div>
+      <div class="eci-title">Election Commission of India</div>
+      <div class="eci-sub">Madhya Pradesh State e-Voting Portal</div>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <div class="home-hero">
+      <div class="hero-badge">🗳️ Secure Digital Democracy</div>
+      <h1 class="hero-title">e-Voting System</h1>
+      <p class="hero-desc">Transparent, Secure &amp; Accessible Elections for the Citizens of Madhya Pradesh</p>
+    </div>
+
+    <div class="portal-grid">
+      <div class="portal-card admin-card" onclick="window.location.href='{{ url_for('admin_login') }}'" style="cursor: pointer;">
+        <div class="card-icon">⚙️</div>
+        <div class="card-badge">OFFICIALS ONLY</div>
+        <h2>Admin Portal</h2>
+        <p>Manage election campaigns, add candidates, schedule voting periods, and publish results.</p>
+        <ul class="card-features">
+          <li>✓ Create &amp; manage campaigns</li>
+          <li>✓ Add candidates &amp; party details</li>
+          <li>✓ Schedule voting periods</li>
+          <li>✓ Publish live results</li>
+        </ul>
+        <a href="{{ url_for('admin_login') }}" class="card-btn admin-btn" onclick="event.stopPropagation()">Enter Admin Portal →</a>
+      </div>
+
+      <div class="portal-card voter-card" onclick="window.location.href='{{ url_for('voter_login') }}'" style="cursor: pointer;">
+        <div class="card-icon">🗳️</div>
+        <div class="card-badge">REGISTERED VOTERS</div>
+        <h2>Voter Portal</h2>
+        <p>Exercise your democratic right. Login with your Voter ID to cast your vote securely.</p>
+        <ul class="card-features">
+          <li>✓ Secure voter authentication</li>
+          <li>✓ View active campaigns</li>
+          <li>✓ Cast your vote digitally</li>
+          <li>✓ Instant vote confirmation</li>
+        </ul>
+        <a href="{{ url_for('voter_login') }}" class="card-btn voter-btn" onclick="event.stopPropagation()">Enter Voter Portal →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="home-footer">
+    <p>© 2024 Election Commission of India &nbsp;|&nbsp; Madhya Pradesh &nbsp;|&nbsp; All Rights Reserved</p>
+    <p class="footer-note">Authorized use only. Unauthorized access is a criminal offense under IT Act 2000.</p>
+  </footer>
+</div>
+{% endblock %}

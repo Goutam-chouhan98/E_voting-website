@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Your Campaigns | ECI e-Voting{% endblock %}
+{% block body_class %}voter-body portal-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='voter.css') }}">{% endblock %}
+
+{% block content %}
+<nav class="portal-nav voter-nav">
+  <a href="{{ url_for('voter_dashboard') }}" class="nav-brand">
+    <span class="nav-brand-icon">🗳️</span>
+    <div>
+      <div class="nav-brand-text">ECI Voter Portal</div>
+      <div class="nav-brand-sub">Madhya Pradesh</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <span class="nav-user">👤 {{ voter_name }}</span>
+    <a href="{{ url_for('voter_logout') }}" class="nav-logout">Logout →</a>
+  </div>
+</nav>
+
+<div class="portal-content">
+  <div class="welcome-banner">
+    <span class="wb-icon">👋</span>
+    <div class="wb-text">
+      <h3>Welcome back, {{ voter_name }}!</h3>
+      <p>Below are the active campaigns you can participate in. Each voter can vote once per campaign.</p>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <h1>Active Campaigns</h1>
+    <p>Campaigns currently open for voting</p>
+  </div>
+
+  {% if campaigns %}
+  <div class="cards-grid">
+    {% for c in campaigns %}
+    <div class="card vcampaign-card {% if c.already_voted %}voted-card{% endif %}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div>
+          <div class="vcampaign-title">{{ c['campaign_name'] }}</div>
+          <div class="vcampaign-constituency">📍 {{ c['constituency'] }}</div>
+        </div>
+        <span class="badge badge-active">LIVE</span>
+      </div>
+
+      <div style="color:rgba(255,255,255,0.35);font-size:12px;margin-bottom:12px">
+        ID: {{ c['campaign_id'] }} &nbsp;·&nbsp; {{ c['candidate_count'] }} candidates
+      </div>
+
+      {% if c['already_voted'] %}
+      <div class="voted-stamp">✅ You have already voted in this campaign</div>
+      <button class="btn btn-voted" disabled style="width:100%">Vote Cast</button>
+      {% else %}
+      <div class="time-remaining">⏰ Voting closes: {{ c['end_dt'][:16]|replace('T',' ') }}</div>
+      <a href="{{ url_for('voter_vote', campaign_id=c['campaign_id']) }}" class="btn btn-vote" style="width:100%;text-align:center;display:block;text-decoration:none">
+        🗳️ &nbsp;Vote Now
+      </a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty-state">
+    <span class="empty-icon">📋</span>
+    <p>No active campaigns at the moment.<br>Check back later or contact your polling authority.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

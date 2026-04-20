@@ -1,0 +1,91 @@
+/* VOTER PORTAL – Deep Teal/Cyan theme */
+:root {
+  --accent: #06b6d4;
+  --accent-glow: rgba(6,182,212,0.2);
+  --accent-subtle: rgba(6,182,212,0.08);
+  --bg: #0a1628;
+  --bg2: #0f2040;
+  --bg3: #162a50;
+}
+.voter-body { background: var(--bg); }
+.voter-auth {
+  background: linear-gradient(135deg, #0a1628 0%, #081a30 50%, #0a1628 100%);
+}
+.voter-auth::before {
+  content: ''; position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 70% 60%, rgba(6,182,212,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+/* Nav */
+.voter-nav { background: rgba(10,22,40,0.92); border-bottom-color: rgba(6,182,212,0.15); }
+/* Accent overrides */
+.btn-primary.voter { background: linear-gradient(135deg, #06b6d4, #0284c7); color: white; }
+.btn-primary.voter:hover { box-shadow: 0 6px 24px rgba(6,182,212,0.45); }
+.btn-vote {
+  background: linear-gradient(135deg, #06b6d4, #0284c7);
+  color: white; box-shadow: 0 4px 16px rgba(6,182,212,0.3);
+}
+.btn-vote:hover { box-shadow: 0 8px 28px rgba(6,182,212,0.5); }
+.btn-voted { background: rgba(156,163,175,0.1); color: #6b7280; border: 1px solid rgba(156,163,175,0.2); cursor: not-allowed; }
+/* Campaign card */
+.vcampaign-card { position: relative; overflow: hidden; }
+.vcampaign-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #06b6d4, #0284c7);
+}
+.vcampaign-card.voted-card { opacity: 0.65; }
+.vcampaign-card.voted-card::after { background: linear-gradient(90deg, #6b7280, #4b5563); }
+.vcampaign-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; margin-bottom: 6px; }
+.vcampaign-constituency { color: rgba(255,255,255,0.45); font-size: 13px; margin-bottom: 16px; }
+.time-remaining {
+  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+  font-size: 13px; color: #22d3ee; display: flex; align-items: center; gap: 8px;
+}
+.voted-stamp {
+  background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+  font-size: 13px; color: #4ade80; display: flex; align-items: center; gap: 8px;
+}
+/* Voter form focus */
+.voter-body .form-field input:focus,
+.voter-body .form-field textarea:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.2); }
+/* Candidate selection */
+.voter-body .candidate-card:hover { border-color: #06b6d4; }
+.voter-body .candidate-card.selected { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.2); background: rgba(6,182,212,0.06); }
+.voter-body .candidate-check { background: #06b6d4; }
+.submit-vote-btn {
+  background: linear-gradient(135deg, #06b6d4, #0284c7);
+  color: white; font-size: 15px; padding: 14px 32px;
+  box-shadow: 0 6px 24px rgba(6,182,212,0.35);
+}
+.submit-vote-btn:hover { box-shadow: 0 10px 36px rgba(6,182,212,0.5); }
+/* Confirmation accent */
+.voter-body .confirm-detail { border-color: rgba(6,182,212,0.2); }
+.confirm-vote-btn {
+  background: linear-gradient(135deg, #06b6d4, #0284c7);
+  color: white; font-size: 15px; padding: 14px 32px;
+  box-shadow: 0 6px 24px rgba(6,182,212,0.35);
+}
+.confirm-vote-btn:hover { box-shadow: 0 10px 36px rgba(6,182,212,0.5); }
+/* Thank you */
+.thankyou-card { max-width: 520px; margin: 60px auto; text-align: center; padding: 60px 40px; }
+.thankyou-card h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: white; margin-bottom: 14px; }
+.thankyou-card p { color: rgba(255,255,255,0.5); margin-bottom: 10px; line-height: 1.6; }
+.receipt-box {
+  background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 12px; padding: 20px 24px; margin: 28px 0; text-align: left;
+}
+.receipt-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+.receipt-row:last-child { border-bottom: none; }
+.receipt-row .rl { color: rgba(255,255,255,0.4); }
+.receipt-row .rv { color: white; font-weight: 600; }
+/* Welcome banner */
+.welcome-banner {
+  background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(2,132,199,0.1));
+  border: 1px solid rgba(6,182,212,0.2); border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 28px; display: flex; align-items: center; gap: 14px;
+}
+.welcome-banner .wb-icon { font-size: 1.8rem; }
+.welcome-banner .wb-text h3 { color: white; font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; }
+.welcome-banner .wb-text p { color: rgba(255,255,255,0.4); font-size: 13px; }

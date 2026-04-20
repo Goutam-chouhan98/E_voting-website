@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>e-Voting System</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to e-Voting Portal</h2>
+    {% if error %}
+      <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="/verify_voter">
+      <input type="text" name="voter_id" placeholder="Enter Your Voter ID" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
